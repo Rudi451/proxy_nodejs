@@ -1,20 +1,25 @@
 const http = require('http');
 const httpProxy = require('http-proxy');
 
-// Erstelle einen Proxy-Server
-const proxy = httpProxy.createProxyServer({});
+const proxy = httpProxy.createProxyServer();
 
 const server = http.createServer((req, res) => {
 	const host = req.headers.host;
 
-	// Routing basierend auf der Domain
-	if (host === 'my-yoga.work') {
-		proxy.web(req, res, {target: 'http://localhost:7001'});
-	} else if (host === 'pingybot.com') {
-		proxy.web(req, res, {target: 'http://localhost:5000'});
+	const targetMap = {
+		'my-yoga.work': 'http://localhost:7001',
+		'pingybot.com': 'http://localhost:5000',
+	};
+
+	if (targetMap[host]) {
+		proxy.web(req, res, {target: targetMap[host]}, (err) => {
+			console.error(`Fehler beim Proxying zu ${targetMap[host]}:`, err);
+			res.writeHead(404, {'Content-Type': 'text/plain'});
+			res.end('404 - Zielserver nicht erreichbar');
+		});
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
-		res.end('Domain nicht gefunden');
+		res.end('404 - Domain nicht gefunden');
 	}
 });
 
