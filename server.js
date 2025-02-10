@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
 		proxy.web(
 			req,
 			res,
-			{target: targetMap[host], changeOrigin: true},
+			{target: targetMap[host], changeOrigin: true, secure: false},
 			(err) => {
 				console.error(`Fehler beim Proxying zu ${targetMap[host]}:`, err);
 				res.writeHead(404, {'Content-Type': 'text/plain'});
