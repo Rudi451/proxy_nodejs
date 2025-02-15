@@ -18,8 +18,8 @@ const optionsMyYoga = {
 };
 
 const optionsPingyBot = {
-	key: fs.readFileSync(PATH_PINGY_BOT, 'privkey.pem'),
-	cert: fs.readFileSync(PATH_PINGY_BOT, 'fullchain.pem'),
+	key: fs.readFileSync(path.join(PATH_PINGY_BOT, 'privkey.pem')),
+	cert: fs.readFileSync(path.join(PATH_PINGY_BOT, 'fullchain.pem')),
 };
 
 // HTTPS Server mit Routing auf Basis der Domain
