@@ -43,6 +43,7 @@ const server = https.createServer((req, res) => {
 
 	if (host === 'my-yoga.work') {
 		// Proxy-Anfrage für my-yoga.work
+		console.log('my yoga abgerufen');
 		proxy.web(req, res, {
 			target: 'http://localhost:7001',
 			key: optionsMyYoga.key,
@@ -52,6 +53,7 @@ const server = https.createServer((req, res) => {
 		});
 	} else if (host === 'pingybot.com') {
 		// Proxy-Anfrage für pingybot.com
+		console.log('pingybot ist abgerufen');
 		proxy.web(req, res, {
 			target: 'http://localhost:5000',
 			key: optionsPingyBot.key,
@@ -64,6 +66,6 @@ const server = https.createServer((req, res) => {
 	}
 });
 
-server.listen(8080, () => {
-	console.log('HTTPS Proxy-Server läuft auf Port 8080 mit forwarding auf 443');
+server.listen(443, () => {
+	console.log('HTTPS Proxy-Server läuft auf Port  auf 443');
 });
