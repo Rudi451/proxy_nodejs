@@ -38,7 +38,7 @@ try {
 }
 
 // HTTPS Server mit Routing auf Basis der Domain
-const server = https.createServer((req, res) => {
+const server = https.createServer(optionsMyYoga, (req, res) => {
 	const host = req.headers.host;
 
 	if (host === 'my-yoga.work') {
