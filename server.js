@@ -29,7 +29,7 @@ const server = https.createServer((req, res) => {
 	if (host === 'my-yoga.work') {
 		// Proxy-Anfrage für my-yoga.work
 		proxy.web(req, res, {
-			target: 'https://localhost:7001',
+			target: 'http://localhost:7001',
 			key: optionsMyYoga.key,
 			cert: optionsMyYoga.cert,
 			ca: optionsMyYoga.ca,
@@ -38,7 +38,7 @@ const server = https.createServer((req, res) => {
 	} else if (host === 'pingybot.com') {
 		// Proxy-Anfrage für pingybot.com
 		proxy.web(req, res, {
-			target: 'https://localhost:5000',
+			target: 'http://localhost:5000',
 			key: optionsPingyBot.key,
 			cert: optionsPingyBot.cert,
 			changeOrigin: true,
