@@ -8,7 +8,8 @@ const server = http.createServer((req, res) => {
 
 	const targetMap = {
 		'my-yoga.work': 'http://localhost:7001',
-		'pingybot.com': 'http://localhost:5000',
+		'pingybot.com': 'https://pingybot.com:5000',
+		// 'pingybot.com': 'http://localhost:5000',
 		// 'pingybot.com/.well-known/acme-challenge/KZ6x1S-MB47Njq-_a5_OR8TSZfP5SP4Ba0etjawsM1w'
 	};
 
