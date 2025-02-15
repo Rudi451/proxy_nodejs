@@ -1,5 +1,7 @@
 const http = require('http');
 const httpProxy = require('http-proxy');
+const net = require('net');
+const url = require('url');
 
 // Erstelle einen Proxy-Server
 const proxy = httpProxy.createProxyServer({});
@@ -12,20 +14,24 @@ const server = http.createServer((req, res) => {
 	console.log('parsedUrl: ', parsedUrl2);
 	const target2 = parsedUrl2.protocol + '//' + parsedUrl2.hostname;
 	console.log('target2: ', target2);
-
-	// Routing basierend auf der Domain
-	if (host === 'my-yoga.work') {
-		console.log('trying to connect my yoga.work');
-		proxy.web(req, res, {target: 'http://localhost:7002', secure: false});
-	} else if (host === 'pingybot.com') {
-		console.log('trying to connect pingybot.com');
-		proxy.web(req, res, {target: 'http://localhost:5000', secure: false});
-	} else {
-		res.writeHead(404, {'Content-Type': 'text/plain'});
-		res.end('Domain nicht gefunden');
-	}
 });
 
 server.listen(7001, () => {
 	console.log('Proxy-Server läuft auf Port 7001');
+});
+
+server.on('connect', (req, socket) => {
+	console.log('Receiving reverse proxy request for: ', req.url);
+
+	const serverUrl = url.parse('https://' + req.url);
+
+	const srvSocket = net.connect(serverUrl.port, serverUrl.hostname, () => {
+		socket.write(
+			'HTTP/1.1 200 Connection Established\r\n' +
+				'Proxy-agent: Node-Proxy\r\n' +
+				'\r\n'
+		);
+		srvSocket.pipe(socket);
+		socket.pipe(srvSocket);
+	});
 });
