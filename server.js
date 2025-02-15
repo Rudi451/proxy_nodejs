@@ -1,35 +1,43 @@
-const http = require('http');
+const https = require('https');
 const httpProxy = require('http-proxy');
+const fs = require('fs');
+const path = require('path');
 
-const proxy = httpProxy.createProxyServer();
+// Erstelle einen Proxy-Server
+const proxy = httpProxy.createProxyServer({});
 
-const server = http.createServer((req, res) => {
+const PATH_MY_YOGA = path.join(process.cwd(), '..', 'pingy_ver1', 'cert');
+const PATH_PINGY_BOT = path.join(process.cwd(), '..', 'pingy2', 'cert');
+// Lese Zertifikate für beide Domains ein
+console.log('Path my yoga:', PATH_MY_YOGA);
+console.log('Path pingybot:', PATH_PINGY_BOT);
+const optionsMyYoga = {
+	key: fs.readFileSync(path.join(PATH_MY_YOGA, 'my-yoga.work.key')),
+	cert: fs.readFileSync(path.join(PATH_MY_YOGA, 'my-yoga.work.cer')),
+	ca: fs.readFileSync(path.join(PATH_MY_YOGA, 'ca.cer')),
+};
+
+const optionsPingyBot = {
+	key: fs.readFileSync(PATH_PINGY_BOT, 'privkey.pem'),
+	cert: fs.readFileSync(PATH_PINGY_BOT, 'certificate.pem'),
+};
+
+// HTTPS Server mit Routing auf Basis der Domain
+const server = https.createServer((req, res) => {
 	const host = req.headers.host;
 
-	const targetMap = {
-		'my-yoga.work': 'http://localhost:7001',
-		'pingybot.com': 'https://pingybot.com:5000',
-		// 'pingybot.com': 'http://localhost:5000',
-		// 'pingybot.com/.well-known/acme-challenge/KZ6x1S-MB47Njq-_a5_OR8TSZfP5SP4Ba0etjawsM1w'
-	};
-
-	if (targetMap[host]) {
-		proxy.web(
-			req,
-			res,
-			{target: targetMap[host], secure: false, changeOrigin: true},
-			(err) => {
-				console.error(`Fehler beim Proxying zu ${targetMap[host]}:`, err);
-				res.writeHead(404, {'Content-Type': 'text/plain'});
-				res.end('404 - Zielserver nicht erreichbar');
-			}
-		);
+	if (host === 'my-yoga.work') {
+		// Proxy-Anfrage für my-yoga.work
+		proxy.web(req, res, {target: 'https://localhost:7001'}, optionsMyYoga);
+	} else if (host === 'pingybot.com') {
+		// Proxy-Anfrage für pingybot.com
+		proxy.web(req, res, {target: 'https://localhost:5000'}, optionsPingyBot);
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
-		res.end('404 - Domain nicht gefunden');
+		res.end('Domain nicht gefunden');
 	}
 });
 
 server.listen(8080, () => {
-	console.log('Proxy-Server läuft auf Port 8080');
+	console.log('HTTPS Proxy-Server läuft auf Port 8080 mit forwarding auf 443');
 });
