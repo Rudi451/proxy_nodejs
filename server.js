@@ -1,12 +1,14 @@
-const http = require('http');
+const express = require('express');
+const app = express();
 
-const TARGET_URL = 'https://my-yoga.work:7001'; // Zieladresse für die Weiterleitung
+const TARGET_URL = 'https://my-yoga.work:7002';
 
-const server = http.createServer((req, res) => {
-	res.writeHead(302, {Location: TARGET_URL});
-	res.end();
+app.use((req, res) => {
+	res.redirect(301, TARGET_URL);
 });
 
-server.listen(7001, () => {
-	console.log('Server läuft auf Port 7001 und leitet weiter nach', TARGET_URL);
+app.listen(7001, () => {
+	console.log(
+		`Server läuft auf Port 7001 und leitet weiter nach ${TARGET_URL}`
+	);
 });
