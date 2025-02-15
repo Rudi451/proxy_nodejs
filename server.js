@@ -11,16 +11,31 @@ const PATH_PINGY_BOT = path.join(process.cwd(), '..', 'pingy2', 'cert');
 // Lese Zertifikate für beide Domains ein
 console.log('Path my yoga:', PATH_MY_YOGA);
 console.log('Path pingybot:', PATH_PINGY_BOT);
-const optionsMyYoga = {
-	key: fs.readFileSync(path.join(PATH_MY_YOGA, 'my-yoga.work.key')),
-	cert: fs.readFileSync(path.join(PATH_MY_YOGA, 'my-yoga.work.cer')),
-	ca: fs.readFileSync(path.join(PATH_MY_YOGA, 'ca.cer')),
-};
+const optionsMyYoga = {};
+const optionsPingyBot = {};
 
-const optionsPingyBot = {
-	key: fs.readFileSync(path.join(PATH_PINGY_BOT, 'privkey.pem')),
-	cert: fs.readFileSync(path.join(PATH_PINGY_BOT, 'fullchain.pem')),
-};
+try {
+	optionsMyYoga.key = fs.readFileSync(
+		path.join(PATH_MY_YOGA, 'my-yoga.work.key')
+	);
+	optionsMyYoga.cert = fs.readFileSync(
+		path.join(PATH_MY_YOGA, 'my-yoga.work.cer')
+	);
+	optionsMyYoga.ca = fs.readFileSync(path.join(PATH_MY_YOGA, 'ca.cer'));
+} catch (err) {
+	console.log('Fehler beim Laden von optionsMyYoga:', err);
+}
+
+try {
+	optionsPingyBot.key = fs.readFileSync(
+		path.join(PATH_PINGY_BOT, 'privkey.pem')
+	);
+	optionsPingyBot.cert = fs.readFileSync(
+		path.join(PATH_PINGY_BOT, 'fullchain.pem')
+	);
+} catch (err) {
+	console.log('Fehler beim Laden von optionsPingyBot:', err);
+}
 
 // HTTPS Server mit Routing auf Basis der Domain
 const server = https.createServer((req, res) => {
