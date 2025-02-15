@@ -21,6 +21,7 @@
 	"homepage": "https://github.com/Rudi451/proxy_nodejs#readme",
 	"description": "",
 	"dependencies": {
+		"express": "^4.21.2",
 		"fs": "^0.0.1-security",
 		"http": "^0.0.1-security",
 		"http-proxy": "^1.18.1",
