@@ -45,7 +45,7 @@ const server = https.createServer((req, res) => {
 		// Proxy-Anfrage für my-yoga.work
 		console.log('my yoga abgerufen');
 		proxy.web(req, res, {
-			target: 'http://localhost:7001',
+			target: 'http://localhost:7002',
 			key: optionsMyYoga.key,
 			cert: optionsMyYoga.cert,
 			ca: optionsMyYoga.ca,
