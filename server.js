@@ -9,8 +9,10 @@ const server = http.createServer((req, res) => {
 
 	// Routing basierend auf der Domain
 	if (host === 'my-yoga.work') {
+		console.log('trying to connect my yoga.work');
 		proxy.web(req, res, {target: 'http://localhost:7002', secure: false});
 	} else if (host === 'pingybot.com') {
+		console.log('trying to connect pingybot.com');
 		proxy.web(req, res, {target: 'http://localhost:5000', secure: false});
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
