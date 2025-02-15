@@ -19,7 +19,7 @@ const optionsMyYoga = {
 
 const optionsPingyBot = {
 	key: fs.readFileSync(PATH_PINGY_BOT, 'privkey.pem'),
-	cert: fs.readFileSync(PATH_PINGY_BOT, 'certificate.pem'),
+	cert: fs.readFileSync(PATH_PINGY_BOT, 'fullchain.pem'),
 };
 
 // HTTPS Server mit Routing auf Basis der Domain
@@ -28,10 +28,21 @@ const server = https.createServer((req, res) => {
 
 	if (host === 'my-yoga.work') {
 		// Proxy-Anfrage für my-yoga.work
-		proxy.web(req, res, {target: 'https://localhost:7001'}, optionsMyYoga);
+		proxy.web(req, res, {
+			target: 'https://localhost:7001',
+			key: optionsMyYoga.key,
+			cert: optionsMyYoga.cert,
+			ca: optionsMyYoga.ca,
+			changeOrigin: true,
+		});
 	} else if (host === 'pingybot.com') {
 		// Proxy-Anfrage für pingybot.com
-		proxy.web(req, res, {target: 'https://localhost:5000'}, optionsPingyBot);
+		proxy.web(req, res, {
+			target: 'https://localhost:5000',
+			key: optionsPingyBot.key,
+			cert: optionsPingyBot.cert,
+			changeOrigin: true,
+		});
 	} else {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
 		res.end('Domain nicht gefunden');
