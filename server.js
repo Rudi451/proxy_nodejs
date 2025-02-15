@@ -6,6 +6,12 @@ const proxy = httpProxy.createProxyServer({});
 
 const server = http.createServer((req, res) => {
 	const host = req.headers.host;
+	console.log('host from req.headers. host:', host);
+
+	const parsedUrl2 = url.parse(req.url);
+	console.log('parsedUrl: ', parsedUrl2);
+	const target2 = parsedUrl2.protocol + '//' + parsedUrl2.hostname;
+	console.log('target2: ', target2);
 
 	// Routing basierend auf der Domain
 	if (host === 'my-yoga.work') {
