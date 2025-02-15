@@ -10,8 +10,8 @@ app.use((req, res) => {
 	res.redirect(301, TARGET_URL);
 });
 
-app.listen(7001, () => {
+app.listen(8080, () => {
 	console.log(
-		`Server läuft auf Port 7001 und leitet weiter nach ${TARGET_URL}`
+		`Server läuft auf Port 8080 und leitet weiter nach ${TARGET_URL}`
 	);
 });
